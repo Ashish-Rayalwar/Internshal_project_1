@@ -1,0 +1,25 @@
+const express = require("express");
+const app = express();
+const mongoose = require("mongoose");
+require("dotenv").config();
+mongoose.set("strictQuery", false);
+const multer = require("multer");
+const cors = require("cors");
+const { dbConnection } = require("./database/db");
+const userRoutes = require("../src/routes/userRoutes");
+const postRoutes = require("../src/routes/postRoutes");
+const url = process.env.URL;
+const port = process.env.PORT || 5000;
+
+app.use(multer().any());
+// app.use(cors());
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/api/accounts", userRoutes);
+app.use("/api/post", postRoutes);
+
+dbConnection(url);
+app.listen(port, () => {
+  console.log(`server start on port ${port}`);
+});
