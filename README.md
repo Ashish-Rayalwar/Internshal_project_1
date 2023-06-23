@@ -6,6 +6,16 @@
 
 ### Overview - only login user can create, delete, update and read post.
 
+## How to start the application
+
+### step 1 - clone this repository. run command -npm i-
+
+### step 2 - craete dotenv file and add variables, PORT=5000, JWTA=JWT secret key, URL = mongoDB url
+
+### step 3 - Go to client folder and run command -npm i-
+
+### step 4 - run command -npm start-
+
 ## FEATURE I - User
 
 ### Models

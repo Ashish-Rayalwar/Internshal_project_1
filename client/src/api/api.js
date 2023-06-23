@@ -1,4 +1,5 @@
-const URL = "http//localhost:5000/api";
+const URL = "https://postapp-n67x.onrender.com/api";
+// const URL = "http//localhost:5000/api";
 
 export const api = {
   login: `${URL}/accounts/login`,
