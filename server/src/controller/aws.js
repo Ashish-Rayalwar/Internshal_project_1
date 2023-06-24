@@ -7,8 +7,14 @@ aws.config.update({
 
 let uploadFile = async (file) => {
   return new Promise(function (resolve, reject) {
-    // this function will upload file to aws and return the link
-    let s3 = new aws.S3({ apiVersion: "2006-03-01" }); // we will be using the s3 service of aws
+    // This function will upload the file to AWS and return the link
+    let s3 = new aws.S3({ apiVersion: "2006-03-01" }); // We will be using the S3 service of AWS
+
+    const fileSizeLimit = 1024 * 1024 * 1024; // 1 GB limit
+
+    if (file.size > fileSizeLimit) {
+      return reject({ error: "File size exceeds the limit of 1 GB." });
+    }
 
     var uploadParams = {
       ACL: "public-read",
@@ -22,7 +28,7 @@ let uploadFile = async (file) => {
         return reject({ error: err });
       }
 
-      console.log("file uploaded succesfully");
+      console.log("File uploaded successfully");
       return resolve(data.Location);
     });
   });

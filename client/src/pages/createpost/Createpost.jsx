@@ -7,7 +7,7 @@ import { api } from "../../api/api";
 
 const Createpost = () => {
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // Added loading state
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
   const handleImageChange = (event) => {
@@ -20,20 +20,20 @@ const Createpost = () => {
     formData.append("imgURL", image);
 
     setError("");
-    setLoading(true); // Set loading to true
+    setLoading(true);
 
     api
       .post(`/post`, formData)
       .then((response) => {
         console.log(response.data.data);
         window.alert("file created successfully");
-        setLoading(false); // Set loading to false after successful request
+        setLoading(false);
         navigate("/posts");
       })
       .catch((error) => {
         setError(error.response.data.message);
         console.log(error.response.data.message);
-        setLoading(false); // Set loading to false after error response
+        setLoading(false);
       });
   }
 
@@ -50,7 +50,7 @@ const Createpost = () => {
             <span>Description</span>
             <input type="text" placeholder="description" name="desc" />
             <span>
-              Add image <h6>(optional)</h6>
+              Add image/video <h6>(optional)</h6>
             </span>
             <input
               className="file"
@@ -65,7 +65,7 @@ const Createpost = () => {
           </div>
         </form>
         {loading && <CircularProgress />}{" "}
-        {/* Display the spinner while loading */}
+        {/* Display the progress bar while loading */}
         {error && (
           <span>
             <Alert

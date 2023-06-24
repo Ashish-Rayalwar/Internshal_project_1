@@ -12,7 +12,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api/api";
-
+import ReactPlayer from "react-player";
 const Singlepost = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -72,11 +72,15 @@ const Singlepost = () => {
       .get(`/post/download/${postId}`)
       .then((response) => {
         console.log(response.data);
-        window.open(response.data)
+        window.open(response.data);
       })
       .catch((err) => {
         console.log(err.response);
       });
+  };
+
+  const isImageURL = (url) => {
+    return /\.(jpeg|jpg|gif|png)$/.test(url);
   };
 
   return (
@@ -100,14 +104,16 @@ const Singlepost = () => {
                   }}
                 >
                   <CardActionArea>
-                    {x.imgURL ? (
+                    {x.imgURL && isImageURL(x.imgURL) ? (
                       <CardMedia
                         component="img"
                         height="300"
                         image={x.imgURL}
                         alt="green iguana"
                       />
-                    ) : null}
+                    ) : (
+                      <ReactPlayer url={x.imgURL} controls={true} />
+                    )}
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="div">
                         {x.title}
@@ -157,7 +163,7 @@ const Singlepost = () => {
                         <Button
                           onClick={() => download(x._id)}
                           variant="contained"
-                          color="error"
+                          color="warning"
                         >
                           download
                         </Button>
