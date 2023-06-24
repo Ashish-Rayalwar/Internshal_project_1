@@ -2,7 +2,7 @@
 
 ## Project - Post Application
 
-### Project Link ==> https://threedshopmernproject.onrender.com
+### Project Link ==> https://postapp-n67x.onrender.com/login
 
 ### Overview - only login user can create, delete, update and read post.
 
@@ -13,6 +13,8 @@
 ### step 2 - craete dotenv file and add variables, PORT=5000, JWTA=JWT secret key, URL = mongoDB url
 
 ### step 3 - Go to client folder and run command -npm i-
+
+### step 4 - Go to client folder and create .env file and add variables REACT_APP_BASE_URL=http://localhost:5000/api create another file .env.production file and add variables REACT_APP_BASE_URL=/api
 
 ### step 4 - run command -npm start-
 
