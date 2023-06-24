@@ -141,6 +141,18 @@ const deletePost = async (req, res) => {
   }
 };
 
+const downloadFile = async (req, res) => {
+  try {
+    let postId = req.params.postId;
+    let post = await postModel.findOne({ _id: postId });
+    console.log(post.imgURL);
+    return res.status(200).send(post.imgURL);
+  } catch (error) {
+    console.log("error in download", error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createPost,
   getPosts,
@@ -148,4 +160,5 @@ module.exports = {
   getPostsById,
   editPost,
   deletePost,
+  downloadFile,
 };

@@ -67,6 +67,18 @@ const Singlepost = () => {
     }
   };
 
+  const download = (postId) => {
+    api
+      .get(`/post/download/${postId}`)
+      .then((response) => {
+        console.log(response.data);
+        window.open(response.data)
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
   return (
     <div>
       {loading ? (
@@ -141,6 +153,13 @@ const Singlepost = () => {
                           color="error"
                         >
                           Delete
+                        </Button>
+                        <Button
+                          onClick={() => download(x._id)}
+                          variant="contained"
+                          color="error"
+                        >
+                          download
                         </Button>
                       </Box>
                     </CardContent>
