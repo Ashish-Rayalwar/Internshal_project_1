@@ -14,11 +14,12 @@ const loginValidation = Joi.object({
 const postValidation = Joi.object({
   title: Joi.string().min(1).max(30),
   desc: Joi.string().min(1).max(2000),
+  imgURL: Joi.string(),
 });
 
 const postUpdateValidation = Joi.object({
   title: Joi.string().min(1).max(30),
-  desc: Joi.string().min(1).max(200),
+  desc: Joi.string().min(1).max(2000),
   imgURL: Joi.string(),
 });
 

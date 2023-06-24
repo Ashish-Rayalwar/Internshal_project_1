@@ -19,8 +19,8 @@ const Posts = () => {
     return new Date(date).toLocaleDateString("en-US", options);
   };
   useEffect(() => {
-    axios
-      .get(`${api.getPosts}/post`)
+    api
+      .get(`/post`)
       .then((response) => {
         console.log(response.data.data);
         setData(response.data.data);
@@ -61,12 +61,14 @@ const Posts = () => {
                 }}
               >
                 <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    height="300"
-                    image={x.imgURL}
-                    alt="green iguana"
-                  />
+                  {x.imgURL ? (
+                    <CardMedia
+                      component="img"
+                      height="300"
+                      image={x.imgURL}
+                      alt="green iguana"
+                    />
+                  ) : null}
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
                       {x.title}

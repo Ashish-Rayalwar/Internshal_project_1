@@ -70,11 +70,46 @@ function Navbar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "start",
+                  padding: "10px",
+                }}
+                onClick={handleCloseNavMenu}
+              >
+                <Link style={{ textDecoration: "none", color: "black" }} to="/">
+                  <Typography
+                    style={{ marginTop: "2px", cursor: "pointer" }}
+                    textAlign="center"
+                  >
+                    HOME
+                  </Typography>
+                </Link>
+                <Link
+                  style={{ textDecoration: "none", color: "black" }}
+                  to="/posts"
+                >
+                  <Typography
+                    style={{ marginTop: "2px", cursor: "pointer" }}
+                    textAlign="center"
+                  >
+                    MY-POSTS
+                  </Typography>
+                </Link>
+                <Link
+                  style={{ textDecoration: "none", color: "black" }}
+                  to="/create"
+                >
+                  <Typography
+                    style={{ marginTop: "2px", cursion: "pointer" }}
+                    textAlign="center"
+                  >
+                    CREATE-POSTS
+                  </Typography>
+                </Link>
+              </MenuItem>
             </Menu>
           </Box>
 

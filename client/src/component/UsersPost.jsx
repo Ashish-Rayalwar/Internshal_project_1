@@ -6,36 +6,56 @@ import {
   CardMedia,
   Typography,
   Button,
+  Alert,
 } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { api, header } from "../api/api";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { api } from "../api/api";
 
 const Singlepost = () => {
   const [data, setData] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [show, setShow] = useState(false);
-
+  const navigate = useNavigate();
   const formatDate = (date) => {
     const options = { day: "numeric", month: "short", year: "numeric" };
     return new Date(date).toLocaleDateString("en-US", options);
   };
 
-  useEffect(() => {
-    axios
-      .get(`${api.getUsersPosts}/post/user`, header)
+  const fetchPosts = () => {
+    api
+      .get(`/post/user`)
       .then((response) => {
         console.log(response.data.data);
         setData(response.data.data);
       })
       .catch((error) => {
         setData([]);
-        console.log(error);
+        console.log(error.response.data.message);
         setError(error.response.data.message);
       });
-  }, [data]);
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    fetchPosts();
+    setLoading(false);
+  }, []);
+
+  const handleDelete = (postId) => {
+    api
+      .delete(`/post/${postId}`)
+      .then((response) => {
+        window.alert(response.data.message);
+        fetchPosts(); // Call fetchPosts after deleting a post
+      })
+      .catch((err) => {
+        window.alert(err.response.data.message);
+        console.log(err.response.data.message);
+      });
+  };
 
   const TruncatedText = (text, maxWords) => {
     const words = text.split(" ");
@@ -46,95 +66,107 @@ const Singlepost = () => {
       return text;
     }
   };
+
   return (
     <div>
-      {data.length &&
-        data.map((x, i) => {
-          const formattedDate = formatDate(x.createdAt);
-          const words = x.desc;
-          var description = TruncatedText(words, 50);
-          return (
-            <>
-              <Card
-                key={x._id}
-                sx={{
-                  maxWidth: 580,
-                  margin: "auto",
-                  marginTop: "100px",
-                }}
-              >
-                <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    height="300"
-                    image={x.imgURL}
-                    alt="green iguana"
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {x.title}
-                    </Typography>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          {data.length > 0 ? (
+            data.map((x, i) => {
+              const formattedDate = formatDate(x.createdAt);
+              const words = x.desc;
+              var description = TruncatedText(words, 50);
+              return (
+                <Card
+                  key={x._id}
+                  sx={{
+                    maxWidth: 580,
+                    margin: "auto",
+                    marginTop: "100px",
+                  }}
+                >
+                  <CardActionArea>
+                    {x.imgURL ? (
+                      <CardMedia
+                        component="img"
+                        height="300"
+                        image={x.imgURL}
+                        alt="green iguana"
+                      />
+                    ) : null}
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {x.title}
+                      </Typography>
 
-                    <Typography variant="body2" color="text.secondary">
-                      {description}
+                      <Typography variant="body2" color="text.secondary">
+                        {description}
 
-                      {description.length > 50 ? (
-                        <h4
-                          onClick={() => {
-                            return show ? setShow(false) : setShow(true);
-                          }}
-                          style={{ textDecoration: "underlined" }}
-                        >
-                          {show ? "view less" : "view more"}
-                        </h4>
-                      ) : null}
-                    </Typography>
-                    <Typography
-                      style={{ marginTop: "20px" }}
-                      variant="body2"
-                      color="text.secondary"
-                    >
-                      posted by {x.user.name} on {formattedDate}
-                    </Typography>
-                    <Box
-                      style={{
-                        display: "flex",
-                        float: "right",
-                        padding: "20px",
-                        gap: "20px",
-                      }}
-                    >
-                      <Link to={`/posts/${x._id}`}>
-                        <Button variant="contained" color="success">
-                          Edit
-                        </Button>
-                      </Link>
-                      <Button
-                        onClick={() => {
-                          axios
-                            .delete(`${api.deletePost}/post/${x._id}`, header)
-                            .then((response) => {
-                              window.alert(response.data.message);
-                            })
-                            .catch((err) => {
-                              window.alert(err.response.data.message);
-
-                              console.log(err.response.data.message);
-                            });
-                        }}
-                        variant="contained"
-                        color="error"
+                        {description.length > 50 ? (
+                          <h4
+                            onClick={() => {
+                              return show ? setShow(false) : setShow(true);
+                            }}
+                            style={{ textDecoration: "underline" }}
+                          >
+                            {show ? "view less" : "view more"}
+                          </h4>
+                        ) : null}
+                      </Typography>
+                      <Typography
+                        style={{ marginTop: "20px" }}
+                        variant="body2"
+                        color="text.secondary"
                       >
-                        Delete
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-              ;
-            </>
-          );
-        })}
+                        posted by {x.user.name} on {formattedDate}
+                      </Typography>
+                      <Box
+                        style={{
+                          display: "flex",
+                          float: "right",
+                          padding: "20px",
+                          gap: "20px",
+                        }}
+                      >
+                        <Link to={`/posts/${x._id}`}>
+                          <Button variant="contained" color="success">
+                            Edit
+                          </Button>
+                        </Link>
+                        <Button
+                          onClick={() => handleDelete(x._id)}
+                          variant="contained"
+                          color="error"
+                        >
+                          Delete
+                        </Button>
+                      </Box>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              );
+            })
+          ) : (
+            <div style={{ marginTop: "100px" }}>
+              {error && (
+                <span>
+                  <Alert
+                    severity="error"
+                    onClose={() => {
+                      setError("");
+                      navigate("/create");
+                    }}
+                  >
+                    you haven't created any posts yet
+                  </Alert>
+                </span>
+              )}
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };

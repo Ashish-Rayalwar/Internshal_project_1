@@ -3,7 +3,7 @@ import "./create.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { Alert, CircularProgress } from "@mui/material";
 import axios from "axios";
-import { api, header } from "../../api/api";
+import { api } from "../../api/api";
 
 const Createpost = () => {
   const [error, setError] = useState("");
@@ -22,12 +22,13 @@ const Createpost = () => {
     setError("");
     setLoading(true); // Set loading to true
 
-    axios
-      .post(`${api.craetePost}/post`, formData, header)
+    api
+      .post(`/post`, formData)
       .then((response) => {
         console.log(response.data.data);
         window.alert("file created successfully");
         setLoading(false); // Set loading to false after successful request
+        navigate("/posts");
       })
       .catch((error) => {
         setError(error.response.data.message);
@@ -46,9 +47,7 @@ const Createpost = () => {
           <div className="details">
             <span>Title</span>
             <input type="text" required placeholder="title" name="title" />
-            <span>
-              Description <h6>(optional)</h6>
-            </span>
+            <span>Description</span>
             <input type="text" placeholder="description" name="desc" />
             <span>
               Add image <h6>(optional)</h6>

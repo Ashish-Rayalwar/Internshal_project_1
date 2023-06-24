@@ -3,38 +3,39 @@ import { Link, useNavigate } from "react-router-dom";
 import "./signup.scss";
 import axios from "axios";
 import Alert from "@mui/material/Alert";
-import { api, header } from "../../api/api";
+import { api } from "../../api/api";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Signup = () => {
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(api);
     let formData = new FormData(e.target);
     const userCredentials = Object.fromEntries(formData);
-    console.log(formData);
     setError("");
-    axios
-      .post(api.signup, userCredentials, header)
+    setLoading(true);
+    api
+      .post(`/accounts/signup`, userCredentials)
       .then((response) => {
-        console.log(response.data.data);
+        setLoading(false);
         window.alert(response.data.message);
         navigate("/login");
       })
       .catch((error) => {
+        setLoading(false);
         setError(error.response.data.message);
-        console.log(error.response.data.message);
-        // window.alert(error.response.data.message);
+        window.alert(error.response.data.message);
       });
   }
+
   return (
     <div className="signup-container">
       <div className="signup">
         <div className="title">
-          {" "}
-          <span>SignUp</span>{" "}
+          <span>SignUp</span>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="details">
@@ -44,14 +45,19 @@ const Signup = () => {
             <input type="email" placeholder="email" name="email" />
             <span>Enter your Password</span>
             <input type="password" placeholder="password" name="password" />
-            <button type="submit">Continue</button>
+            <button type="submit" disabled={loading}>
+              {loading ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                "Continue"
+              )}
+            </button>
           </div>
         </form>
         <div className="desc">
           <button>
-            {" "}
             <Link className="link" to="/login">
-              Already have an account ? LogIn
+              Already have an account? LogIn
             </Link>
           </button>
         </div>
