@@ -5,7 +5,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import { useEffect } from "react";
-
+import ReactPlayer from "react-player";
 import axios from "axios";
 import { api } from "../api/api";
 const Posts = () => {
@@ -42,6 +42,10 @@ const Posts = () => {
     }
   };
 
+  const isImageURL = (url) => {
+    return /\.(jpeg|jpg|gif|png)$/.test(url);
+  };
+
   return (
     <div>
       {data.length > 0 &&
@@ -61,14 +65,16 @@ const Posts = () => {
                 }}
               >
                 <CardActionArea>
-                  {x.imgURL ? (
+                  {x.imgURL && isImageURL(x.imgURL) ? (
                     <CardMedia
                       component="img"
                       height="300"
                       image={x.imgURL}
                       alt="green iguana"
                     />
-                  ) : null}
+                  ) : (
+                    <ReactPlayer url={x.imgURL} controls={true} />
+                  )}
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
                       {x.title}

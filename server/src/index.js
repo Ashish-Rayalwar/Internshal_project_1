@@ -17,7 +17,7 @@ app.use(cors());
 // app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(express.static(path.join(__dirname, "../build")));
+app.use(express.static(path.join(__dirname, "../build")));
 app.use("/api/accounts", userRoutes);
 app.use("/api/post", postRoutes);
 
@@ -26,7 +26,7 @@ app.listen(port, () => {
   console.log(`server start on port ${port}`);
 });
 
-// app.get("*", (req, res) => {
-//   const file = path.join(__dirname, "../build/index.html");
-//   res.sendFile(file);
-// });
+app.get("*", (req, res) => {
+  const file = path.join(__dirname, "../build/index.html");
+  res.sendFile(file);
+});
